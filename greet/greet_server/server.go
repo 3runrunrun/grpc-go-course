@@ -25,6 +25,7 @@ func main() {
 	s := grpc.NewServer()
 	greetpb.RegisterGreetServiceServer(s, &server{})
 
+	// serve grpc server with defined connection
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
