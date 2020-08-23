@@ -21,7 +21,9 @@ func main() {
 
 	// define a client service
 	c := calculatorpb.NewCalculatorServiceClient(cc)
-	fmt.Printf("client service created: %f\n", c)
+	// fmt.Printf("client service created: %f\n", c)
+
+	doSum(c)
 }
 
 func doSum(c calculatorpb.CalculatorServiceClient) {
