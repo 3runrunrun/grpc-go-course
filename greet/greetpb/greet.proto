@@ -3,4 +3,27 @@ syntax = "proto3";
 package greet;
 option go_package="greet/greetpb";
 
-service GreetService{}
+// greeting message
+message Greeting {
+    string first_name = 1;
+    string last_name = 2;
+}
+
+// request message, use to wrap Greeting from prior line 
+message GreetRequest {
+    Greeting greeting = 1;
+}
+
+// response message, return a result string
+message GreetResponse {
+    string result = 1;
+}
+
+// API service
+service GreetService{
+    // unary
+    // rpc method, named Greet
+    // <-- GreetRequest message as a request message
+    // --> GreetResponse message as a response message
+    rpc Greet (GreetRequest) returns (GreetResponse) {};
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -11,6 +12,22 @@ import (
 )
 
 type server struct{}
+
+// define grpc server func, which is accept grpc request, then return grpc response
+// by implementing GreetServiceServer, which contains Greet()
+func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
+
+	fmt.Printf("Greet function is invoked with %v\n", req) // will be appeared when the client invokes this function
+
+	firstname := req.GetGreeting().GetFirstName() // extract firstname from input request
+	result := "Hello" + firstname
+
+	res := &greetpb.GreetResponse{
+		Result: result,
+	}
+
+	return res, nil
+}
 
 func main() {
 	fmt.Println("hello world")
