@@ -49,3 +49,7 @@ func doUnary(c greetpb.GreetServiceClient) {
 
 	log.Printf("response from Greet RPC: %v", res.Result)
 }
+
+func doServerStreaming(c greetpb.GreetServiceClient) {
+
+}

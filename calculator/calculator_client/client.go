@@ -39,5 +39,5 @@ func doSum(c calculatorpb.CalculatorServiceClient) {
 		log.Fatalf("failed to Sum: %v\n", err)
 	}
 
-	log.Printf("result = %v\n", res)
+	log.Printf("result = %v\n", res.Result)
 }

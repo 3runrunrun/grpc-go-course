@@ -9,13 +9,23 @@ message Greeting {
     string last_name = 2;
 }
 
-// request message, use to wrap Greeting from prior line 
+// unary request message
 message GreetRequest {
     Greeting greeting = 1;
 }
 
-// response message, return a result string
+// unary response message
 message GreetResponse {
+    string result = 1;
+}
+
+// stream request message
+message GreetManyTimesRequest {
+    Greeting greeting = 1;
+}
+
+// stream response message
+message GreetManyTimesResponse {
     string result = 1;
 }
 
@@ -26,4 +36,7 @@ service GreetService{
     // <-- GreetRequest message as a request message
     // --> GreetResponse message as a response message
     rpc Greet (GreetRequest) returns (GreetResponse) {};
+
+    // stream
+    rpc GreetManyTimes (GreetManyTimesRequest) returns (stream GreetManyTimesResponse);
 }
