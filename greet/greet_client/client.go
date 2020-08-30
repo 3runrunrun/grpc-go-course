@@ -28,7 +28,8 @@ func main() {
 	c := greetpb.NewGreetServiceClient(cc)
 	// fmt.Printf("created client: %f\n", c)
 
-	doUnary(c)
+	// doUnary(c)
+	doServerStreaming(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -81,11 +82,11 @@ func doServerStreaming(c greetpb.GreetServiceClient) {
 
 		// if any random error appear
 		if err != nil {
-			log.Fatalf("failed to read stream: %v", err)
+			log.Fatalf("failed to read stream: %v\n", err)
 		}
 
 		// read streams' response
-		fmt.Printf("stream response: %v", msg.GetResult())
+		fmt.Printf("stream response: %v\n", msg.GetResult())
 	}
 
 }

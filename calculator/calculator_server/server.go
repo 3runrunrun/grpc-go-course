@@ -28,6 +28,30 @@ func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculat
 	return res, nil
 }
 
+func (*server) PrimeDecomposition(req *calculatorpb.PrimeRequest, stream calculatorpb.CalculatorService_PrimeDecompositionServer) error {
+	var factor int32
+	factor = 2
+
+	fmt.Printf("PrimeDecomposition invoked with: %v\n", req)
+
+	numA := req.GetNumA()
+
+	for numA > 1 {
+		if numA%factor == 0 {
+			res := &calculatorpb.PrimeResponse{
+				Result: factor,
+			}
+			numA = int32(numA / factor)
+			// send stream response
+			stream.Send(res)
+		} else {
+			factor++
+		}
+	}
+
+	return nil
+}
+
 func main() {
 	fmt.Println("calculator server is running...")
 

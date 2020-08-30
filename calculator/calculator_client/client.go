@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/3runrunrun/grpc-go-course/calculator/calculatorpb"
@@ -23,7 +24,8 @@ func main() {
 	c := calculatorpb.NewCalculatorServiceClient(cc)
 	// fmt.Printf("client service created: %f\n", c)
 
-	doSum(c)
+	// doSum(c)
+	primeFactor(c)
 }
 
 func doSum(c calculatorpb.CalculatorServiceClient) {
@@ -40,4 +42,32 @@ func doSum(c calculatorpb.CalculatorServiceClient) {
 	}
 
 	log.Printf("result = %v\n", res.Result)
+}
+
+func primeFactor(c calculatorpb.CalculatorServiceClient) {
+	fmt.Println("decomposing prime number...")
+
+	req := &calculatorpb.PrimeRequest{
+		NumA: 120,
+	}
+	stream, err := c.PrimeDecomposition(context.Background(), req)
+	if err != nil {
+		log.Fatalf("failed to get stream: %v\n", err)
+	}
+
+	for {
+		res, err := stream.Recv()
+		if err == io.EOF {
+			// we've reached the end of stream
+			break
+		}
+
+		if err != nil {
+			log.Fatalf("failed to read streams' message: %v", err)
+		}
+
+		fmt.Printf("%v ", res.GetResult())
+	}
+
+	fmt.Println("")
 }
