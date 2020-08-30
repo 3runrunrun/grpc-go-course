@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/3runrunrun/grpc-go-course/greet/greetpb"
@@ -51,5 +52,40 @@ func doUnary(c greetpb.GreetServiceClient) {
 }
 
 func doServerStreaming(c greetpb.GreetServiceClient) {
+	fmt.Println("starting server Streaming RPC...")
+
+	// create stream request message
+	req := &greetpb.GreetManyTimesRequest{
+		Greeting: &greetpb.Greeting{
+			FirstName: "fathir",
+			LastName:  "qisthi",
+		},
+	}
+
+	// call RPC stream function
+	// streamClient = RPC streams' response
+	streamClient, err := c.GreetManyTimes(context.Background(), req)
+	if err != nil {
+		log.Fatalf("failed to invoke stream RPC: %v\n", err)
+	}
+
+	// read streams' message
+	for {
+		// call Receive function, to read streams' message
+		msg, err := streamClient.Recv()
+		// end of file OR end of stream msg
+		if err == io.EOF {
+			// we have reached end of stream
+			break
+		}
+
+		// if any random error appear
+		if err != nil {
+			log.Fatalf("failed to read stream: %v", err)
+		}
+
+		// read streams' response
+		fmt.Printf("stream response: %v", msg.GetResult())
+	}
 
 }
