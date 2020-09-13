@@ -105,20 +105,17 @@ func doClientStreaming(c greetpb.GreetServiceClient) {
 		},
 		&greetpb.LongGreetRequest{
 			Greeting: &greetpb.Greeting{
-				FirstName: "winda",
-				LastName:  "willina",
+				FirstName: "carl",
 			},
 		},
 		&greetpb.LongGreetRequest{
 			Greeting: &greetpb.Greeting{
-				FirstName: "mohamad",
-				LastName:  "rendiansah",
+				FirstName: "johnson",
 			},
 		},
 		&greetpb.LongGreetRequest{
 			Greeting: &greetpb.Greeting{
-				FirstName: "irsalina",
-				LastName:  "khairina",
+				FirstName: "billy",
 			},
 		},
 	}
