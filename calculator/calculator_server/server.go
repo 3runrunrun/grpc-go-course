@@ -29,8 +29,7 @@ func (*server) Sum(ctx context.Context, req *calculatorpb.SumRequest) (*calculat
 }
 
 func (*server) PrimeDecomposition(req *calculatorpb.PrimeRequest, stream calculatorpb.CalculatorService_PrimeDecompositionServer) error {
-	var factor int32
-	factor = 2
+	factor := int32(2)
 
 	fmt.Printf("PrimeDecomposition invoked with: %v\n", req)
 
@@ -46,6 +45,7 @@ func (*server) PrimeDecomposition(req *calculatorpb.PrimeRequest, stream calcula
 			stream.Send(res)
 		} else {
 			factor++
+			log.Printf("factor number has increased to %v ", factor)
 		}
 	}
 

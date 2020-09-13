@@ -48,7 +48,7 @@ func primeFactor(c calculatorpb.CalculatorServiceClient) {
 	fmt.Println("decomposing prime number...")
 
 	req := &calculatorpb.PrimeRequest{
-		NumA: 120,
+		NumA: 12,
 	}
 	stream, err := c.PrimeDecomposition(context.Background(), req)
 	if err != nil {
@@ -58,14 +58,11 @@ func primeFactor(c calculatorpb.CalculatorServiceClient) {
 	for {
 		res, err := stream.Recv()
 		if err == io.EOF {
-			// we've reached the end of stream
-			break
+			break // we've reached the end of stream
 		}
-
 		if err != nil {
 			log.Fatalf("failed to read streams' message: %v", err)
 		}
-
 		fmt.Printf("%v ", res.GetResult())
 	}
 

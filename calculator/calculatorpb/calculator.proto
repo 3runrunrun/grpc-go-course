@@ -24,3 +24,4 @@ service CalculatorService {
     rpc Sum (SumRequest) returns (SumResponse) {};
     rpc PrimeDecomposition (PrimeRequest) returns (stream PrimeResponse);    
 }
+
