@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strconv"
@@ -51,6 +52,29 @@ func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greetpb
 	}
 
 	return nil
+}
+
+// implementing LongGreet rpc, the stream-client rpc
+func (*server) LongGreet(stream greetpb.GreetService_LongGreetServer) error {
+
+	fmt.Printf("LongGreet rpc is invoked with the streaming-client request\n")
+
+	result := "Hello "
+	for {
+		req, err := stream.Recv()
+
+		if err == io.EOF {
+			return stream.SendAndClose(&greetpb.LongGreetResponse{
+				Result: result,
+			}) // we've finished reading the client-stream request
+		}
+		if err != nil {
+			log.Fatalf("error while reading the client-stream: %v\n", err)
+		}
+
+		firstname := req.GetGreeting().GetFirstName()
+		result += firstname + "! "
+	}
 }
 
 func main() {
