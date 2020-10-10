@@ -75,6 +75,38 @@ func (*server) ComputeAverage(stream calculatorpb.CalculatorService_ComputeAvera
 	}
 }
 
+func (*server) FindMaximum(stream calculatorpb.CalculatorService_FindMaximumServer) error {
+	fmt.Println("FindMaximum rpc is invoked with BiDi request")
+
+	curNumber := int32(0)
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("error while reading client request: %v\n", err)
+			return err
+		}
+
+		if req.GetNumA() > curNumber {
+			curNumber = req.GetNumA()
+
+			err = stream.Send(&calculatorpb.FindMaximumResponse{
+				Result: curNumber,
+			})
+			if err != nil {
+				log.Fatalf("error while sending stream to the client: %v\n", err)
+				return err
+			}
+		}
+
+		curNumber = req.GetNumA()
+	}
+
+}
+
 func main() {
 	fmt.Println("calculator server is running...")
 

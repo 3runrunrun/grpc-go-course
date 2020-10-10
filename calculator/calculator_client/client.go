@@ -27,7 +27,8 @@ func main() {
 
 	// doSum(c)
 	// primeFactor(c)
-	computeAverage(c)
+	// computeAverage(c)
+	findMax(c)
 }
 
 func doSum(c calculatorpb.CalculatorServiceClient) {
@@ -96,4 +97,58 @@ func computeAverage(c calculatorpb.CalculatorServiceClient) {
 	}
 
 	fmt.Printf("Average result is %v\n", res)
+}
+
+func findMax(c calculatorpb.CalculatorServiceClient) {
+	fmt.Println("starting BiDi streaming client...")
+
+	inputs := []int32{1, 5, 3, 6, 2, 20}
+
+	stream, err := c.FindMaximum(context.Background())
+	if err != nil {
+		log.Fatalf("error while creating client stream: %v\n", err)
+	}
+
+	waitc := make(chan struct{})
+
+	// ** send bunch of messages to the client
+	go func() {
+		// ** send bunch of messages (to the server)
+		for _, input := range inputs {
+			fmt.Println("---------------------------------------")
+			fmt.Printf("sending number: %d\n", input)
+
+			// create request message
+			req := &calculatorpb.FindMaximumRequest{
+				NumA: input,
+			}
+			// send message
+			stream.Send(req)
+
+			time.Sleep(1000 * time.Millisecond)
+		}
+
+		// close the stream
+		stream.CloseSend()
+	}()
+
+	//  ** receive bunch of messages from the server
+	go func() {
+		// ** receive bunch of messages
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("error while receiving response from the server: %v\n", err)
+			}
+
+			fmt.Printf("highest number is: %d\n", res.Result)
+		}
+		close(waitc)
+	}()
+
+	// block until everything is done
+	<-waitc
 }
